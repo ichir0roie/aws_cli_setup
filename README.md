@@ -84,4 +84,4 @@ aws_cli_setup.pyを実行
 pip install したい？
 
 chromeの認証も自動化したい。
-Seleniumとかでできるか。ドライババージョンアップとかめんどくさいよな。
+→[こちら](https://github.com/ichir0roie/chrome-mfa-login)
