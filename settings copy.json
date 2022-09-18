@@ -1,0 +1,20 @@
+{
+    "aws_credential_path": "~~~/.aws/credentials",
+    "default_profile": "A",
+    "profiles": {
+        "A": {
+            "serial": "arn:aws:iam::",
+            "mfa_secret_key": "",
+            "region": "ap-northeast-1",
+            "aws_access_key_id_default": "",
+            "aws_secret_access_key_default": ""
+        },
+        "B": {
+            "serial": "arn:aws:iam::",
+            "mfa_secret_key": "",
+            "region": "ap-northeast-1",
+            "aws_access_key_id_default": "",
+            "aws_secret_access_key_default": ""
+        }
+    }
+}
