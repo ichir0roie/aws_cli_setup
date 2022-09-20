@@ -1,6 +1,5 @@
 # aws_cli_setup
 
-![](.mdImages/README/20220916_212833.png)
 
 aws cli をmfa認証で使用している場合に特化して実装。
 
