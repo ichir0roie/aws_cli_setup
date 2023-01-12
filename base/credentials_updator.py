@@ -4,7 +4,6 @@ import shutil
 import subprocess as sp
 import os
 import ast
-from types import NoneType
 
 import pyotp
 

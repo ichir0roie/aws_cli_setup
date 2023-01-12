@@ -1,3 +1,8 @@
+
+python3.9
+
+# TODO pip module or exe
+
 # aws_cli_setup
 
 ![](.mdImages/README/20220916_212833.png)
