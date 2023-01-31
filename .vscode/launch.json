@@ -8,13 +8,16 @@
             "name": "Python: 現在のファイル",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/awsmfa.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "cwd": "${workspaceFolder}",
             "env": {
                 "PYTHONPATH":"${workspaceFolder}"
-            }
+            },
+            "args": [
+                "insprd"
+            ]
         }
     ]
 }

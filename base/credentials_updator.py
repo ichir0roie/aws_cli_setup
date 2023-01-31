@@ -18,10 +18,10 @@ import os
 
 
 class CredentialsUpdator:
-    def __init__(self, replace_profile: str):
-        self.replace_profile = replace_profile
-        self.mode_replace = True if replace_profile != None else False
-        self.settings: Settings = Settings(load_profile=not self.mode_replace)
+    def __init__(self):
+        self.replace_profile = "default"  # XXX
+        self.mode_replace = False
+        self.settings: Settings = Settings(load_profile=True)
         self.text_all = None
         pass
 
@@ -42,7 +42,37 @@ class CredentialsUpdator:
             self.text_all += self.__generate_update_text(aws_setting)
             if self.settings.default_profile == aws_setting.profile:
                 text_default = self.__generate_update_text(aws_setting, "default")
+                # self.export_env(aws_setting)
         self.text_all = text_default + self.text_all
+
+    def export_env(self, aws_setting: AwsSetting, os_type="win") -> str:
+        format_cmds = [
+            # "setx {key} {value}",
+            # "set {key}={value}",
+            "{key}={value}",
+        ]
+        if os_type != "win":
+            format_cmd = ""
+        cmds_keys = {
+            "AWS_ACCESS_KEY_ID": aws_setting.aws_access_key_id,
+            "AWS_SECRET_ACCESS_KEY": aws_setting.aws_secret_access_key,
+            "AWS_DEFAULT_REGION": aws_setting.region,
+            "AWS_SESSION_TOKEN": aws_setting.aws_session_token,
+        }
+        print(f"profile : {aws_setting.profile}")
+        for fmt in format_cmds:
+            for key, value in cmds_keys.items():
+                cmd = fmt.format(
+                    key=key,
+                    value=value
+                )
+                print(cmd)
+                # sp.run(
+                #     cmd,
+                #     shell=True, capture_output=True, text=True
+                # )
+                # os.environ[key]=value
+        print()
 
     def __update_session_info(self):
         with open(self.settings.aws_credential_path, "w", encoding="utf-8") as f:
@@ -127,7 +157,12 @@ class CredentialsUpdator:
             if not skip:
                 self.settings.aws_setting_list.append(a_s)
 
-    def run(self):
+    def setup(self, replace_profile: str):
+        self.replace_profile = replace_profile
+        self.mode_replace = True if replace_profile != None else False
+        self.settings: Settings = Settings(load_profile=not self.mode_replace)
+        self.text_all = None
+
         self.__backup_credential()
         if self.mode_replace:
             self.load_credential_from_file()
@@ -139,8 +174,13 @@ class CredentialsUpdator:
         self.generate_session_info_text()
         self.__update_session_info()
 
-        self.generate_windows_set_text()
+        # self.generate_windows_set_text()
 
+    def view(self):
+        self.load_credential_from_file()
+        for s in self.settings.aws_setting_list:
+            self.export_env(s)
+        pass
 
 if __name__ == "__main__":
     # cu = CredentialsUpdator()
@@ -150,4 +190,4 @@ if __name__ == "__main__":
 
     cu = CredentialsUpdator(replace_profile="main")
 
-    cu.run()
+    cu.setup()
