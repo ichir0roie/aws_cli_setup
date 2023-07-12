@@ -23,6 +23,7 @@ class CredentialsUpdator:
         self.mode_replace = False
         self.settings: Settings = Settings(load_profile=True)
         self.text_all = None
+        self.replace_region=None
         pass
 
     def __backup_credential(self):
@@ -80,13 +81,20 @@ class CredentialsUpdator:
 
     def __generate_update_text(self, aws_setting: AwsSetting, override_profile_name: str = None) -> str:
         profile_name = aws_setting.profile if override_profile_name is None else override_profile_name
-        text = update_format.format(
+        if self.replace_region is not None:
+            aws_setting.region=self.replace_region
+        if aws_setting.mode_direct:
+            text=update_format_direct.format()
+        else:
+            text= update_format.format(
             profile_name, aws_setting.aws_access_key_id, aws_setting.aws_secret_access_key, aws_setting.aws_session_token, aws_setting.region
         )
         return text
 
     def set_session_info(self):
         for aws_setting in self.settings.aws_setting_list:
+            if aws_setting.mode_direct:
+                continue
             self.__get_session_info(aws_setting)
             time.sleep(1)
         pass
@@ -133,6 +141,7 @@ class CredentialsUpdator:
                 continue
             a_s = AwsSetting()
             skip = False
+            info={}
             for line in item:
                 if line == "default":
                     skip = True
@@ -146,20 +155,45 @@ class CredentialsUpdator:
                     key, value = values
                     if key == "":
                         pass
-                    elif key == "aws_access_key_id":
-                        a_s.aws_access_key_id = value
-                    elif key == "aws_secret_access_key":
-                        a_s.aws_secret_access_key = value
-                    elif key == "aws_session_token":
-                        a_s.aws_session_token = value
-                    elif key == "region":
-                        a_s.region = value
+                    info[key]=value
+            
+            self.set_info(a_s,info)
+            
             if not skip:
                 self.settings.aws_setting_list.append(a_s)
 
-    def setup(self, replace_profile: str):
+
+    def set_info(self,a_s:AwsSetting,info:dict):
+        if "mode_direct"in info.keys():
+            self.set_info_direct(a_s,info)
+            a_s.mode_direct=True
+        else :
+            self.set_info_as_mfa(a_s,info)
+            
+    def set_info_as_mfa(self,a_s:AwsSetting,info:dict):
+        for key,value in info.items():
+            if key == "aws_access_key_id":
+                a_s.aws_access_key_id = value
+            elif key == "aws_secret_access_key":
+                a_s.aws_secret_access_key = value
+            elif key == "aws_session_token":
+                a_s.aws_session_token = value
+            elif key == "region":
+                a_s.region = value  
+                    
+    def set_info_direct(self,a_s:AwsSetting,info:dict):
+        for key,value in info.items():
+            if key == "aws_access_key":
+                a_s.aws_access_key_id = value
+            elif key == "aws_secret_access_key":
+                a_s.aws_secret_access_key = value
+            elif key == "region":
+                a_s.region = value
+            
+    def setup(self, replace_profile: str,region:str=None):
         self.replace_profile = replace_profile
         self.mode_replace = True if replace_profile != None else False
+        self.replace_region=region
         self.settings: Settings = Settings(load_profile=not self.mode_replace)
         self.text_all = None
 

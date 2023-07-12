@@ -17,4 +17,5 @@ else:
         cu.view()
     else:
         profile = sys.argv[1] if len(sys.argv) > 1 else None
-        cu.setup(profile)
+        region=sys.argv[2] if len(sys.argv)>2 else None
+        cu.setup(profile,region)

@@ -1,7 +1,8 @@
 class AwsSetting:
-    profile = ("",)
-    serial = ("",)
-    mfa_secret_key = ("",)
+    mode_direct=False
+    profile = ""
+    serial = ""
+    mfa_secret_key =""
     aws_access_key_id = ""
     aws_secret_access_key = ""
     aws_session_token = ""
@@ -15,12 +16,12 @@ class AwsSetting:
 
     def set_mfa_info(self, profile: str, info: dict):
         self.profile = profile
-        self.serial = info["serial"]
+        self.serial = info.get("serial")
         self.mfa_secret_key = info["mfa_secret_key"]
         self.region = info["region"]
 
-        self.aws_access_key_id_default = info["aws_access_key_id_default"]
-        self.aws_secret_access_key_default = info["aws_secret_access_key_default"]
+        self.aws_access_key_id_default = info.get("aws_access_key_id_default")
+        self.aws_secret_access_key_default = info.get("aws_secret_access_key_default")
 
     def set_session_info(self, info: dict):
         credentials = info["Credentials"]
