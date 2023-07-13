@@ -84,7 +84,12 @@ class CredentialsUpdator:
         if self.replace_region is not None:
             aws_setting.region=self.replace_region
         if aws_setting.mode_direct:
-            text=update_format_direct.format()
+            text=update_format_direct.format(
+                profile_name,
+                aws_setting.aws_access_key_id,
+                aws_setting.aws_secret_access_key,
+                aws_setting.region
+            )
         else:
             text= update_format.format(
             profile_name, aws_setting.aws_access_key_id, aws_setting.aws_secret_access_key, aws_setting.aws_session_token, aws_setting.region
@@ -157,7 +162,7 @@ class CredentialsUpdator:
                         pass
                     info[key]=value
             
-            self.set_info(a_s,info)
+            a_s=self.set_info(a_s,info)
             
             if not skip:
                 self.settings.aws_setting_list.append(a_s)
@@ -165,10 +170,10 @@ class CredentialsUpdator:
 
     def set_info(self,a_s:AwsSetting,info:dict):
         if "mode_direct"in info.keys():
-            self.set_info_direct(a_s,info)
-            a_s.mode_direct=True
+            a_s=self.set_info_direct(a_s,info)
         else :
-            self.set_info_as_mfa(a_s,info)
+            a_s=self.set_info_as_mfa(a_s,info)
+        return a_s
             
     def set_info_as_mfa(self,a_s:AwsSetting,info:dict):
         for key,value in info.items():
@@ -189,6 +194,7 @@ class CredentialsUpdator:
                 a_s.aws_secret_access_key = value
             elif key == "region":
                 a_s.region = value
+        a_s.mode_direct=True
             
     def setup(self, replace_profile: str,region:str=None):
         self.replace_profile = replace_profile

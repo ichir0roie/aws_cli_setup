@@ -15,9 +15,6 @@
             "env": {
                 "PYTHONPATH":"${workspaceFolder}"
             },
-            "args": [
-                "insprd"
-            ]
         }
     ]
 }
