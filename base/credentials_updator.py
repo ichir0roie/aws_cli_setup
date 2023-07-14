@@ -142,7 +142,7 @@ class CredentialsUpdator:
         items = [group.split("\n") for group in data.split("[")]
         item: str
         for item in items:
-            if len(item) < 5:
+            if len(item) < 4:
                 continue
             a_s = AwsSetting()
             skip = False
@@ -169,8 +169,9 @@ class CredentialsUpdator:
 
 
     def set_info(self,a_s:AwsSetting,info:dict):
-        if "mode_direct"in info.keys():
+        if not "aws_session_token"in info.keys():
             a_s=self.set_info_direct(a_s,info)
+            a_s.mode_direct=True
         else :
             a_s=self.set_info_as_mfa(a_s,info)
         return a_s
@@ -185,16 +186,18 @@ class CredentialsUpdator:
                 a_s.aws_session_token = value
             elif key == "region":
                 a_s.region = value  
+        return a_s
                     
     def set_info_direct(self,a_s:AwsSetting,info:dict):
         for key,value in info.items():
-            if key == "aws_access_key":
+            if key == "aws_access_key_id":
                 a_s.aws_access_key_id = value
             elif key == "aws_secret_access_key":
                 a_s.aws_secret_access_key = value
             elif key == "region":
                 a_s.region = value
         a_s.mode_direct=True
+        return a_s
             
     def setup(self, replace_profile: str,region:str=None):
         self.replace_profile = replace_profile

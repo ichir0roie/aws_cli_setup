@@ -9,13 +9,23 @@ os.chdir(dir)
 
 
 cu = CredentialsUpdator()
-if len(sys.argv) == 1:
+
+env_args= os.environ.get("ARGS")
+
+if env_args:
+    values=env_args.split(",")
+    values.insert(0,sys.argv[0])
+    args=values
+else:
+    args=sys.argv
+
+if len(args) == 1:
     cu.setup(None)  # XXX
 else:
-    arg = sys.argv[1]
+    arg = args[1]
     if arg == "view":  # XXX
         cu.view()
     else:
-        profile = sys.argv[1] if len(sys.argv) > 1 else None
-        region=sys.argv[2] if len(sys.argv)>2 else None
+        profile = args[1] if len(args) > 1 else None
+        region=args[2] if len(args)>2 else None
         cu.setup(profile,region)

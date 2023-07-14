@@ -25,6 +25,8 @@ class AwsSetting:
         
         if "mode_direct" in info.keys():
             self.mode_direct=True
+            self.aws_access_key_id=info.get("aws_access_key_id")
+            self.aws_secret_access_key=info.get("aws_secret_access_key")
 
     def set_session_info(self, info: dict):
         credentials = info["Credentials"]

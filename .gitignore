@@ -1,5 +1,7 @@
 profile
 output
-profile.json
-settings.json
+*.json
+!launch.json
+!settings copy.json
 __pycache__
+.env
