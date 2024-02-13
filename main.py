@@ -21,15 +21,13 @@ cu = CredentialsUpdator()
 args=sys.argv
 print(args)
 
-# if len(args) == 1:
-#     cu.setup(None)  # XXX
-# else:
-#     arg = args[1]
-#     if arg == "view":  # XXX
-#         cu.view()
-#     else:
-#         profile = args[1] if len(args) > 1 else None
-#         region=args[2] if len(args)>2 else None
-#         cu.setup(profile,region)
-
-cu.setup(None)
+if len(args) == 1:
+    cu.setup(None)  # XXX
+else:
+    arg = args[1]
+    if arg == "view":  # XXX
+        cu.view()
+    else:
+        profile = args[1] if len(args) > 1 else None
+        region=args[2] if len(args)>2 else None
+        cu.setup(profile,region)

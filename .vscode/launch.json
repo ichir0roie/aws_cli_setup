@@ -8,7 +8,7 @@
             "name": "Python: 現在のファイル",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/awsmfa.py",
+            "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
             "cwd": "${workspaceFolder}",

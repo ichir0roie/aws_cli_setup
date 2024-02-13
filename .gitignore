@@ -5,3 +5,5 @@ output
 !settings copy.json
 __pycache__
 .env
+
+venv
