@@ -14,5 +14,4 @@ args = sys.argv
 print(args)
 
 profile = args[1] if len(args) > 1 else None
-reload = True if len(args) > 2 else False
-cu.setup(profile, reload)
+cu.setup(profile)

@@ -8,7 +8,7 @@ import ast
 import pyotp
 
 from base.aws_setting import AwsSetting
-from base.settings import Settings
+from base.settings import *
 
 from base.const import *
 
@@ -95,6 +95,8 @@ class CredentialsUpdator:
 
         aws_setting.set_session_info(key_sets)
 
+        set_profile_time(aws_setting.profile)
+
         time.sleep(1)
 
     def load_cred_file(self):
@@ -157,16 +159,17 @@ class CredentialsUpdator:
         a_s.mode_direct = True
         return a_s
 
-    def setup(self, replace_profile: str | None, reload: bool = False):
+    def setup(self, replace_profile: str):
         self.backup_cred_file()
         self.load_cred_file()
-        self.overwrite_session_info(None, True)
 
-        if reload:
-            self.update_session_token(
-                self.settings.profiles[replace_profile]
-            )
-        elif replace_profile is None:
-            self.update_all_session_token()
+        self.overwrite_session_info(
+            default_profile=None, preset=True
+        )
 
-        self.overwrite_session_info(replace_profile, False)
+        if check_profile_expire(replace_profile):
+            self.update_session_token(self.settings.profiles[replace_profile])
+
+        self.overwrite_session_info(
+            default_profile=replace_profile, preset=False
+        )
